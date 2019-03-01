@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
+use App\Category;
 
 class ProductController extends Controller
 {
@@ -14,6 +15,7 @@ class ProductController extends Controller
     $allProducts = Product::all();
 
     return response()->json($allProducts);
+
   }
 
   public function create(Request $request){
@@ -21,8 +23,13 @@ class ProductController extends Controller
     $userData = $request->validate([
         'name' => 'required|max:30',
         'description' => 'required',
-        'quantity' => 'required'
+        'quantity' => 'required',
+        'category_id' => 'required'
     ]);
+
+    if(empty(Category::find($userData['category_id']))){
+      return response()->json(['error' => 'category at id does not exists']);
+    }
 
     $newProduct = new Product;
     $newProduct->fill($userData);
@@ -50,9 +57,14 @@ class ProductController extends Controller
 
     if ((empty($userData['name'])) &&
         (empty($userData['description'])) &&
-        (empty($userData['quantity']))
+        (empty($userData['quantity']) &&
+        (empty($userData['category_id'])))
       ) {
       return response()->json(['error' => 'Missing update data']);
+    }
+
+    if(empty(Category::find($userData['category_id']))){
+      return response()->json(['error' => 'category at id does not exists']);
     }
 
     $productToUpdate = Product::find($id);
