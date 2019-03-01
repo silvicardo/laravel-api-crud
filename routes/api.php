@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::namespace('Api')->group(function() {
+Route::middleware('api.auth')->namespace('Api')->group(function() {
 
     //Products
     Route::get('/products', 'ProductController@index');
