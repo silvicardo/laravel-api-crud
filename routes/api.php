@@ -13,6 +13,24 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::namespace('Api')->group(function() {
+
+    //Products
+    Route::get('/products', 'ProductController@index');
+    Route::post('/products', 'ProductController@create');
+    Route::get('/products/{id}', 'ProductController@show');
+    Route::post('/products/{id}', 'ProductController@update');
+    Route::post('/products/{id}/delete', 'ProductController@destroy');
+
+    //Categories
+    Route::get('/categories','CategoryController@index');
+    Route::post('/categories','CategoryController@create');
+    Route::get('/categories/{id}','CategoryController@show');
+    Route::post('/categories/{id}', 'CategoryController@update');
+    Route::post('/categories/{id}/delete','CategoryController@destroy');
+
 });
